@@ -4,3 +4,12 @@ provider "aws" {
   access_key = local.access_key
   secret_key = local.secret_key
 }
+
+module "dynamodb" {
+  source = "./dynamodb"
+}
+
+module "web_front" {
+  source = "./web_front"
+  bucket_name = "sandbox-web-front-bucket"
+}
