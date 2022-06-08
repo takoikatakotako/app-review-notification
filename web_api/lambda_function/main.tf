@@ -2,11 +2,11 @@
 # Lambda
 ##################################################
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = "xxxx"
+  function_name    = var.function_name
   role             = var.role
   runtime          = "python3.9"
   handler          = "lambda_function.lambda_handler"
-  timeout          = 3
+  timeout          = 30
   filename         = data.archive_file.python_script_archive_file.output_path
   source_code_hash = data.archive_file.python_script_archive_file.output_base64sha256
 
