@@ -13,3 +13,7 @@ module "web_front" {
   source = "./web_front"
   bucket_name = "sandbox-web-front-bucket"
 }
+
+module "web_api" {
+  source = "./web_api"
+}
