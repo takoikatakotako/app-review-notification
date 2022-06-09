@@ -30,7 +30,7 @@ def lambda_handler(event, context):
     #         'slackToken': token
     #     }
     # )
-    response = table.get_item(Key={"slackToken": "https://hooks.slack.com/services/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"})
+    response = table.get_item(Key={"slackToken": "xxxx"})
     item = response['Item']
     sent_entries = item['sentEntries']
 
@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         
         if id not in sent_entries :
 
-            url = 'https://hooks.slack.com/services/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'
+            url = 'xxx'
             method = "POST"
             headers = {"Content-Type" : "application/json"}
 
