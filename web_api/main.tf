@@ -1,10 +1,9 @@
 module "check_function" {
-  source = "./lambda_function"
-  # function_name = "check-function"
-  function_name = "test-function"
-  role = "arn:aws:iam::397693451628:role/service-role/test-function-role-j6x0audo"
-  filename = "check_function.py"
-  archive_filename = "check_function_archive_file.zip"
+  source           = "./lambda_function"
+  function_name    = "registration-function"
+  role             = aws_iam_role.lambda_role.arn
+  filename         = "registration_function.py"
+  archive_filename = "registration_function_archive_file.zip"
 }
 
 #   function_name    = "news-list-get"

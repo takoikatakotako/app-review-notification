@@ -10,7 +10,7 @@ module "dynamodb" {
 }
 
 module "web_front" {
-  source = "./web_front"
+  source      = "./web_front"
   bucket_name = "sandbox-web-front-bucket"
 }
 
