@@ -1,11 +1,11 @@
 import json
 import urllib
+from datetime import datetime
 import boto3
 from boto3.session import Session
 
-
 # App StoreのAPIからレビューを取得する
-def fetch_review_entries(app_id: str):
+def fetch_review_entries(app_id: str, content: str):
     url = f'https://itunes.apple.com/jp/rss/customerreviews/id={app_id}/sortBy=mostRecent/json'
     response = urllib.request.urlopen(url)
     content = json.loads(response.read().decode('utf8'))
@@ -51,10 +51,17 @@ def update_items(table, items):
                 entry_id = entry['id']['label']
                 if entry_id not in sent_entry_ids :
                     slack_token = item['slackToken']
+                    title = entry['title']['label']
+	                author_name = entry['author']['name']['label']
+	                content = entry['content']['label']
 
-                    # ここでエラーハンドリング
-                    send_slack_message(slack_token)
-                
+                    try:
+                        send_slack_message(slack_token, content)
+                    except Exception as e:
+                        fail_date_time = datetime.now().isoformat()
+                        item['failDateTime'].append(fail_date_time)
+                        break 2;
+
                     # 送信済みIdに追加
                     sent_entry_ids.append(entry_id)
 

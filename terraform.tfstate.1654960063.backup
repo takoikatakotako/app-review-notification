@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.1.6",
-  "serial": 44,
+  "serial": 42,
   "lineage": "c2c86fc6-35d5-4ebc-430c-570a3c92a9ad",
   "outputs": {},
   "resources": [
@@ -246,7 +246,7 @@
       ]
     },
     {
-      "module": "module.web_api.module.registration_function",
+      "module": "module.web_api.module.check_function",
       "mode": "data",
       "type": "archive_file",
       "name": "python_script_archive_file",
@@ -280,7 +280,7 @@
       ]
     },
     {
-      "module": "module.web_api.module.registration_function",
+      "module": "module.web_api.module.check_function",
       "mode": "data",
       "type": "template_file",
       "name": "python_script_file",
@@ -296,6 +296,48 @@
             "vars": null
           },
           "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "module": "module.web_api.module.check_function",
+      "mode": "managed",
+      "type": "aws_lambda_function_url",
+      "name": "function_url",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "authorization_type": "NONE",
+            "cors": [
+              {
+                "allow_credentials": false,
+                "allow_headers": [
+                  "content-type"
+                ],
+                "allow_methods": [
+                  "POST"
+                ],
+                "allow_origins": [
+                  "*"
+                ],
+                "expose_headers": [
+                  "content-type"
+                ],
+                "max_age": 0
+              }
+            ],
+            "function_arn": "arn:aws:lambda:ap-northeast-1:397693451628:function:registration-function",
+            "function_name": "registration-function",
+            "function_url": "https://3asu6ywuha2eezgaqlw2sf7ghe0yzzho.lambda-url.ap-northeast-1.on.aws/",
+            "id": "registration-function",
+            "qualifier": "",
+            "timeouts": null,
+            "url_id": "3asu6ywuha2eezgaqlw2sf7ghe0yzzho"
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9fQ=="
         }
       ]
     },
@@ -369,58 +411,7 @@
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
           "dependencies": [
             "module.web_api.aws_iam_role.lambda_role",
-            "module.web_api.data.aws_iam_policy_document.lambda_role_assume_policy_document",
-            "module.web_api.module.registration_function.data.archive_file.python_script_archive_file",
-            "module.web_api.module.registration_function.data.template_file.python_script_file"
-          ]
-        }
-      ]
-    },
-    {
-      "module": "module.web_api.module.registration_function",
-      "mode": "managed",
-      "type": "aws_lambda_function_url",
-      "name": "function_url",
-      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "authorization_type": "NONE",
-            "cors": [
-              {
-                "allow_credentials": false,
-                "allow_headers": [
-                  "content-type"
-                ],
-                "allow_methods": [
-                  "POST"
-                ],
-                "allow_origins": [
-                  "*"
-                ],
-                "expose_headers": [
-                  "content-type"
-                ],
-                "max_age": 0
-              }
-            ],
-            "function_arn": "arn:aws:lambda:ap-northeast-1:397693451628:function:registration-function",
-            "function_name": "registration-function",
-            "function_url": "https://3asu6ywuha2eezgaqlw2sf7ghe0yzzho.lambda-url.ap-northeast-1.on.aws/",
-            "id": "registration-function",
-            "qualifier": "",
-            "timeouts": null,
-            "url_id": "3asu6ywuha2eezgaqlw2sf7ghe0yzzho"
-          },
-          "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
-          "dependencies": [
-            "module.web_api.aws_iam_role.lambda_role",
-            "module.web_api.data.aws_iam_policy_document.lambda_role_assume_policy_document",
-            "module.web_api.module.registration_function.aws_lambda_function.lambda_function",
-            "module.web_api.module.registration_function.data.archive_file.python_script_archive_file",
-            "module.web_api.module.registration_function.data.template_file.python_script_file"
+            "module.web_api.module.check_function.data.archive_file.python_script_archive_file"
           ]
         }
       ]
@@ -517,8 +508,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:397693451628:function:unregistration-function/invocations",
             "kms_key_arn": "",
-            "last_modified": "2022-06-11T15:04:53.598+0000",
-            "layers": [],
+            "last_modified": "2022-06-11T15:04:48.022+0000",
+            "layers": null,
             "memory_size": 128,
             "package_type": "Zip",
             "publish": false,
@@ -533,7 +524,7 @@
             "signing_profile_version_arn": "",
             "source_code_hash": "6XbwVEDYRQJwh2T4R99hFHClECHNdz6H3/an48/7/BA=",
             "source_code_size": 561,
-            "tags": {},
+            "tags": null,
             "tags_all": {},
             "timeout": 30,
             "timeouts": null,
@@ -549,9 +540,7 @@
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
           "dependencies": [
             "module.web_api.aws_iam_role.lambda_role",
-            "module.web_api.data.aws_iam_policy_document.lambda_role_assume_policy_document",
-            "module.web_api.module.unregistration_function.data.archive_file.python_script_archive_file",
-            "module.web_api.module.unregistration_function.data.template_file.python_script_file"
+            "module.web_api.module.unregistration_function.data.archive_file.python_script_archive_file"
           ]
         }
       ]
@@ -597,10 +586,8 @@
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDB9fQ==",
           "dependencies": [
             "module.web_api.aws_iam_role.lambda_role",
-            "module.web_api.data.aws_iam_policy_document.lambda_role_assume_policy_document",
             "module.web_api.module.unregistration_function.aws_lambda_function.lambda_function",
-            "module.web_api.module.unregistration_function.data.archive_file.python_script_archive_file",
-            "module.web_api.module.unregistration_function.data.template_file.python_script_file"
+            "module.web_api.module.unregistration_function.data.archive_file.python_script_archive_file"
           ]
         }
       ]
