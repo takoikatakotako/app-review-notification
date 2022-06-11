@@ -48,3 +48,20 @@ registration
   }
 }
 ```
+
+
+
+# Docker
+
+```
+cd notification_worker/Docker
+docker build -t app-review:latest .
+
+
+export AWS_ACCESS_KEY_ID=YOURACCESSKEY
+export AWS_SECRET_ACCESS_KEY=YOURSECRETKEY
+
+docker run --rm app-review:latest
+
+
+```

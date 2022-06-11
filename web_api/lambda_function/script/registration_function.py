@@ -4,20 +4,11 @@ import uuid
 import traceback
 
 def main(slack_token: str, app_id: str):
-    # dynamodb = boto3.resource('dynamodb')
-    # table = dynamodb.Table('turnip-news-table')
-    
-    # print(id)
-    
-    
-    # 
 
     # Item がすでに存在するかチェック
     dynamo_db = boto3.resource('dynamodb')
     table = dynamo_db.Table('slack-table')
     response = table.get_item(Key={"slackToken": slack_token})
-
-    print(response)
 
     # Item が無く、新規作成の場合
     if 'Item' not in response:
@@ -45,7 +36,9 @@ def main(slack_token: str, app_id: str):
     
     # アプリIDが登録されていない場合
     if app_id not in ios:
-        ios[app_id] = {}
+        ios[app_id] = {
+            'sentEntryIds': []
+        }
         item['ios'] = ios
         table.put_item(Item=item)
         return {
@@ -68,10 +61,8 @@ def lambda_handler(event, context):
         app_id = body['appId']
         return main(slack_token, app_id)
     except Exception as e:
-        print('-----2')
         print(e)
-        print('-----2')
         return {
-            'statusCode': 200,
+            'statusCode': 500,
             'body': '{"message": "すでに作成されている場合"}'
         }
