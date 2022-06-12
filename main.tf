@@ -9,6 +9,10 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
+module "notification_batch" {
+  source = "./notification_batch"
+}
+
 module "web_front" {
   source      = "./web_front"
   bucket_name = "sandbox-web-front-bucket"
