@@ -52,6 +52,75 @@ resource "aws_ecr_repository" "notification_batch_repository" {
   name = "notification-batch-repository"
 }
 
-# Fargate
 
+###############################################
+# Notification Batch Fargate
+###############################################
+resource "aws_ecs_cluster" "notification_batch_cluster" {
+  name = "notification-batch-cluster"
+}
+
+resource "aws_ecs_task_definition" "notification_batch_task_definition" {
+  family                   = "notification-batch-task-definition"
+  task_role_arn            = aws_iam_role.role.arn
+  container_definitions    = data.template_file.notification_batch_container_definitions.rendered
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  requires_compatibilities = ["FARGATE"]
+  execution_role_arn       = aws_iam_role.role.arn
+}
+
+data "template_file" "notification_batch_container_definitions" {
+  template = <<EOF
+[
+  {
+    "cpu": 0,
+    "environment": [
+      {
+        "name": "NAME",
+        "value": "おのじゅん"
+      }
+    ],
+    "name": "ojichat",
+    "image": "${aws_ecr_repository.notification_batch_repository.repository_url}",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "secretOptions": null,
+      "options": {
+        "awslogs-group": "/ecs/ojichat-task",
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "essential": true
+  }
+]
+EOF
+}
+
+
+# scueduled task
+resource "aws_cloudwatch_event_rule" "schedule_rule" {
+  name                = "ojichat-event"
+  schedule_expression = "cron(* * * * ? *)"
+  is_enabled          = true
+}
+
+# resource "aws_cloudwatch_event_target" "fargate_scheduled_task" {
+#   rule     = aws_cloudwatch_event_rule.schedule_rule.name
+#   arn      = aws_ecs_cluster.notification_batch_cluster.arn
+#   role_arn = aws_iam_role.role.arn
+
+#   ecs_target {
+#     task_definition_arn = aws_ecs_task_definition.task_definition.arn
+#     task_count          = 1
+#     launch_type         = "FARGATE"
+
+#     # network_configuration {
+#     #   subnets          = [local.subnets_id]
+#     #   assign_public_ip = true
+#     # }
+#   }
+# }
 
