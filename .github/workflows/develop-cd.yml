@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Generate JSON
-        run: cargo run
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -22,4 +20,4 @@ jobs:
           aws-region: ap-northeast-1
       - name: Deploy to S3
         run: |
-          aws s3 sync ./output $S3_BUCKET_URL --exact-timestamps --delete
+          aws s3 sync web_front/html $S3_BUCKET_URL --exact-timestamps --delete
