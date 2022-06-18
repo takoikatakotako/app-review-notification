@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>アプリのレビュー通知くん</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+
+  <h1>アプリのレビュー通知くん</h1>
+
+  <p>SlackのWebhookとアプリIDを入力すると新着レビューが来た時に教えてくれます。</p>
+
+  <h2>登録</h2>
+
+  <p>Slack Token</p>
+  <input id="registrationSlackToken" type="text" />
+
+  <br />
+
+  <p>App ID</p>
+  <input id="registrationAppId" type="text" />
+
+  <br />
+
+  <input type="button" value="送信" onclick="registration();"/>
+
+  <h2>登録解除</h2>
+
+  <p>Slack Token</p>
+  <input id="unregistrationSlackToken" type="text" />
+
+  <br />
+  <input type="button" value="送信" onclick="unregistration();"/>
+
+
+</body>
+</html>
