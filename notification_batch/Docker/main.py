@@ -70,6 +70,7 @@ def update_items(table, items):
                         item['ios'][app_id]['sentEntryIds'].append(entry_id)
 
             except Exception as e:
+                print(e)
                 fail_date_time = datetime.now().isoformat()
                 item['failDateTime'].append(fail_date_time)
                 break;
