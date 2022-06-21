@@ -101,11 +101,9 @@ def main(profile: Optional[str]):
 
 
 if __name__ == "__main__":
-    print('start')
-
-    # args = sys.argv
-    # if len(args) == 1:
-    #     main(None)
-    # else:
-    #     profile = args[1]
-    #     main(profile)
+    args = sys.argv
+    if len(args) == 1:
+        main(None)
+    else:
+        profile = args[1]
+        main(profile)

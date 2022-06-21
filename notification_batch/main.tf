@@ -91,7 +91,7 @@ data "template_file" "notification_batch_container_definitions" {
       "options": {
         "awslogs-group": "${aws_cloudwatch_log_group.notification_batch_log_group.name}",
         "awslogs-region": "ap-northeast-1",
-        "awslogs-stream-prefix": "yyy"
+        "awslogs-stream-prefix": "zzz"
       }
     },
     "essential": true
