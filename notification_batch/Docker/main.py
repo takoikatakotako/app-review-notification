@@ -57,7 +57,7 @@ def update_items(table, items):
                 entries = fetch_review_entries(app_id)
                 for entry in entries:
                     entry_id = entry['id']['label']
-                    if entry_id not in sent_entry_ids :
+                    if entry_id not in item['ios'][app_id]['sentEntryIds']:
                         slack_token = item['slackToken']
                         title = entry['title']['label']
                         rating = entry['im:rating']['label']
