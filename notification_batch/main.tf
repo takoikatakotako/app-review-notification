@@ -60,37 +60,38 @@ resource "aws_ecs_cluster" "notification_batch_cluster" {
   name = "notification-batch-cluster"
 }
 
+resource "aws_cloudwatch_log_group" "notification_batch_log_group" {
+  name = "/ecs/notification-batch"
+}
+
 resource "aws_ecs_task_definition" "notification_batch_task_definition" {
   family                   = "notification-batch-task-definition"
-  task_role_arn            = aws_iam_role.role.arn
+  task_role_arn            = aws_iam_role.notification_batch_role.arn
   container_definitions    = data.template_file.notification_batch_container_definitions.rendered
   network_mode             = "awsvpc"
   cpu                      = 256
   memory                   = 512
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn       = aws_iam_role.role.arn
+  execution_role_arn       = aws_iam_role.notification_batch_role.arn
 }
+
+
 
 data "template_file" "notification_batch_container_definitions" {
   template = <<EOF
 [
   {
     "cpu": 0,
-    "environment": [
-      {
-        "name": "NAME",
-        "value": "おのじゅん"
-      }
-    ],
+    "environment": [],
     "name": "ojichat",
     "image": "${aws_ecr_repository.notification_batch_repository.repository_url}",
     "logConfiguration": {
       "logDriver": "awslogs",
       "secretOptions": null,
       "options": {
-        "awslogs-group": "/ecs/ojichat-task",
+        "awslogs-group": "${aws_cloudwatch_log_group.notification_batch_log_group.name}",
         "awslogs-region": "ap-northeast-1",
-        "awslogs-stream-prefix": "ecs"
+        "awslogs-stream-prefix": "/ecs"
       }
     },
     "essential": true
@@ -98,7 +99,6 @@ data "template_file" "notification_batch_container_definitions" {
 ]
 EOF
 }
-
 
 # scueduled task
 resource "aws_cloudwatch_event_rule" "schedule_rule" {

@@ -72,13 +72,29 @@ data "aws_iam_policy_document" "build_image_role_policy_document" {
 ##############################################################
 # Fargate 用のロールのポリシー
 ##############################################################
-resource "aws_iam_policy" "policy" {
-  name        = "ojicaht-policy"
-  description = "for ojichat"
-  policy      = data.aws_iam_policy_document.policy.json
+resource "aws_iam_role" "notification_batch_role" {
+  name               = "notification-batch-role"
+  description        = "notification batch role"
+  assume_role_policy = data.aws_iam_policy_document.notification_batch_assume_role_policy_document.json
 }
 
-data "aws_iam_policy_document" "policy" {
+data "aws_iam_policy_document" "notification_batch_assume_role_policy_document" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com", "events.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "notification_batch_policy" {
+  name        = "notification-batch-policy"
+  description = "notification batch policy"
+  policy      = data.aws_iam_policy_document.notification_batch_policy_document.json
+}
+
+data "aws_iam_policy_document" "notification_batch_policy_document" {
   statement {
     effect = "Allow"
     actions = [
@@ -89,35 +105,19 @@ data "aws_iam_policy_document" "policy" {
       "ecs:RunTask",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
-      "iam:PassRole"
+      "iam:PassRole",
+      "dynamodb:*"
     ]
     resources = ["*"]
   }
 }
 
-# IAM Role
-resource "aws_iam_role" "role" {
-  name               = "ojichat-role"
-  description        = "role for ojichat"
-  assume_role_policy = data.aws_iam_policy_document.role.json
-}
-
-data "aws_iam_policy_document" "role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com", "events.amazonaws.com"]
-    }
-  }
-}
-
 resource "aws_iam_role_policy_attachment" "schedule_policy_attachment" {
-  role       = aws_iam_role.role.name
-  policy_arn = aws_iam_policy.policy.arn
+  role       = aws_iam_role.notification_batch_role.name
+  policy_arn = aws_iam_policy.notification_batch_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "event_role_policy_attachment" {
-  role       = aws_iam_role.role.name
+  role       = aws_iam_role.notification_batch_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole"
 }
