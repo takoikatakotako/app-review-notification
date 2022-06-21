@@ -79,6 +79,7 @@ def update_items(table, items):
 
 
 def main(profile: Optional[str]):
+    print('main')
     dynamodb = boto3.resource('dynamodb')
 
     # profileを引数に与えられた場合
@@ -100,9 +101,11 @@ def main(profile: Optional[str]):
 
 
 if __name__ == "__main__":
-    args = sys.argv
-    if len(args) == 1:
-        main(None)
-    else:
-        profile = args[1]
-        main(profile)
+    print('start')
+
+    # args = sys.argv
+    # if len(args) == 1:
+    #     main(None)
+    # else:
+    #     profile = args[1]
+    #     main(profile)

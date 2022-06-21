@@ -26,6 +26,7 @@ data "aws_iam_policy_document" "lambda_role_iam_policy_document" {
       "logs:CreateLogGroup",
       "logs:PutLogEvents",
       "logs:CreateLogStream",
+      "log:*",
       "dynamodb:*",
     ]
     resources = ["*"]
