@@ -106,6 +106,7 @@ data "aws_iam_policy_document" "notification_batch_policy_document" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "iam:PassRole",
+      "log:*",
       "dynamodb:*"
     ]
     resources = ["*"]
