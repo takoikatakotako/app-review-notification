@@ -75,15 +75,13 @@ resource "aws_ecs_task_definition" "notification_batch_task_definition" {
   execution_role_arn       = aws_iam_role.notification_batch_role.arn
 }
 
-
-
 data "template_file" "notification_batch_container_definitions" {
   template = <<EOF
 [
   {
     "cpu": 0,
     "environment": [],
-    "name": "ojichat",
+    "name": "notification-batch",
     "image": "${aws_ecr_repository.notification_batch_repository.repository_url}",
     "logConfiguration": {
       "logDriver": "awslogs",
@@ -91,7 +89,7 @@ data "template_file" "notification_batch_container_definitions" {
       "options": {
         "awslogs-group": "${aws_cloudwatch_log_group.notification_batch_log_group.name}",
         "awslogs-region": "ap-northeast-1",
-        "awslogs-stream-prefix": "zzz"
+        "awslogs-stream-prefix": "/"
       }
     },
     "essential": true
@@ -101,26 +99,25 @@ EOF
 }
 
 # scueduled task
-resource "aws_cloudwatch_event_rule" "schedule_rule" {
-  name                = "ojichat-event"
-  schedule_expression = "cron(* * * * ? *)"
+resource "aws_cloudwatch_event_rule" "notification_batch_event_rule" {
+  name                = "notification-batch-event-rule"
+  schedule_expression = "cron(0 23 * * ? *)" # JST 08:00
   is_enabled          = true
 }
 
-# resource "aws_cloudwatch_event_target" "fargate_scheduled_task" {
-#   rule     = aws_cloudwatch_event_rule.schedule_rule.name
-#   arn      = aws_ecs_cluster.notification_batch_cluster.arn
-#   role_arn = aws_iam_role.role.arn
+resource "aws_cloudwatch_event_target" "notification_batch_event_target" {
+  rule     = aws_cloudwatch_event_rule.notification_batch_event_rule.name
+  arn      = aws_ecs_cluster.notification_batch_cluster.arn
+  role_arn = aws_iam_role.notification_batch_role.arn
 
-#   ecs_target {
-#     task_definition_arn = aws_ecs_task_definition.task_definition.arn
-#     task_count          = 1
-#     launch_type         = "FARGATE"
+  ecs_target {
+    task_definition_arn = aws_ecs_task_definition.notification_batch_task_definition.arn
+    task_count          = 1
+    launch_type         = "FARGATE"
 
-#     # network_configuration {
-#     #   subnets          = [local.subnets_id]
-#     #   assign_public_ip = true
-#     # }
-#   }
-# }
-
+    network_configuration {
+      subnets          = [local.public_subnet_a_id]
+      assign_public_ip = true
+    }
+  }
+}
