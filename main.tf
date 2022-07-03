@@ -15,7 +15,8 @@ module "notification_batch" {
 
 module "web_front" {
   source              = "./web_front"
-  bucket_name         = local.bucket_name
+  domain              = local.domain
+  route53_zone_id     = local.route53_zone_id
   acm_certificate_arn = local.acm_certificate_arn
 }
 

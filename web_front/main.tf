@@ -2,7 +2,7 @@
 # S3
 ##############################################################
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = var.bucket_name
+  bucket = var.domain
 }
 
 resource "aws_s3_bucket_website_configuration" "website_configuration" {
@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "iam_policy_document" {
       identifiers = ["*"]
     }
     resources = [
-      "arn:aws:s3:::${var.bucket_name}/*"
+      "arn:aws:s3:::${var.domain}/*"
     ]
   }
 }
@@ -52,8 +52,8 @@ data "aws_iam_policy_document" "iam_policy_document" {
 ##############################################################
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   origin {
-    domain_name = "${var.bucket_name}.s3-website-ap-northeast-1.amazonaws.com"
-    origin_id   = "S3-${var.bucket_name}"
+    domain_name = "${var.domain}.s3-website-ap-northeast-1.amazonaws.com"
+    origin_id   = "S3-${var.domain}"
 
     custom_origin_config {
       http_port                = 80
@@ -70,18 +70,18 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   }
 
   aliases = [
-    var.bucket_name
+    var.domain
   ]
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = var.bucket_name
+  comment             = var.domain
   default_root_object = "index.html"
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-${var.bucket_name}"
+    target_origin_id = "S3-${var.domain}"
 
     viewer_protocol_policy = "redirect-to-https"
 
@@ -109,5 +109,21 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     geo_restriction {
       restriction_type = "none"
     }
+  }
+}
+
+
+##############################################################
+# Route53
+##############################################################
+resource "aws_route53_record" "route53_record" {
+  zone_id = "Z06272247TSQ89OL8QZN"
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    evaluate_target_health = false
+    name                   = aws_cloudfront_distribution.cloudfront_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.cloudfront_distribution.hosted_zone_id
   }
 }
