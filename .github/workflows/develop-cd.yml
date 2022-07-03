@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       S3_BUCKET_URL: s3://sandbox.swiswiswift.com
+      CLOUD_FRONT_DISTRIBUTION_ID: E3ELPY32A191FY
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,3 +22,6 @@ jobs:
       - name: Deploy to S3
         run: |
           aws s3 sync web_front/html $S3_BUCKET_URL --exact-timestamps --delete
+      - name: Delete Chaches
+        run: |
+          aws cloudfront create-invalidation --distribution-id $CLOUD_FRONT_DISTRIBUTION_ID --paths "/*"
