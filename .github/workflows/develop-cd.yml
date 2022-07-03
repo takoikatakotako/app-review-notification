@@ -8,7 +8,7 @@ jobs:
     name: Deploy to S3
     runs-on: ubuntu-latest
     env:
-      S3_BUCKET_URL: s3://sandbox-web-front-bucket
+      S3_BUCKET_URL: s3://sandbox.swiswiswift.com
     steps:
       - name: Checkout
         uses: actions/checkout@v2
