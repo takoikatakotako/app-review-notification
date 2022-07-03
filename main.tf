@@ -14,8 +14,9 @@ module "notification_batch" {
 }
 
 module "web_front" {
-  source      = "./web_front"
-  bucket_name = "sandbox-web-front-bucket"
+  source              = "./web_front"
+  bucket_name         = local.bucket_name
+  acm_certificate_arn = local.acm_certificate_arn
 }
 
 module "web_api" {
