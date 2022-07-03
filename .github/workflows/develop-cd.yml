@@ -1,11 +1,11 @@
-name: DeployToS3
+name: DeployWebFront
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Deploy to S3
+    name: Deploy Web Front
     runs-on: ubuntu-latest
     env:
       S3_BUCKET_URL: s3://sandbox.swiswiswift.com
