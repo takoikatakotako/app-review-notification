@@ -1,9 +1,8 @@
 # app-review-terraform
 
+SlackのWebhookとアプリIDを入力するとレビューが来た時に教えてくれます。
 
 WebFront
-
-https://sandbox-web-front-bucket.s3.ap-northeast-1.amazonaws.com/index.html
 
 # SetUp
 
