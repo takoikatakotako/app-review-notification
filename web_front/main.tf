@@ -117,7 +117,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
 # Route53
 ##############################################################
 resource "aws_route53_record" "route53_record" {
-  zone_id = "Z06272247TSQ89OL8QZN"
+  zone_id = var.route53_zone_id
   name    = var.domain
   type    = "A"
 

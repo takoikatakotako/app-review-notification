@@ -1,8 +1,7 @@
 provider "aws" {
-  profile    = "default"
-  region     = "ap-northeast-1"
-  access_key = local.access_key
-  secret_key = local.secret_key
+  profile                  = local.aws_profile
+  region                   = "ap-northeast-1"
+  shared_credentials_files = ["~/.aws/credentials"]
 }
 
 module "dynamodb" {
