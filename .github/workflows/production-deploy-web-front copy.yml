@@ -1,15 +1,15 @@
-name: DeployDevelopmentWebFront
+name: DeployProductionWebFront
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Deploy Development Web Front
+    name: Deploy Production Web Front
     runs-on: ubuntu-latest
     env:
-      S3_BUCKET_URL: s3://sandbox.swiswiswift.com
-      CLOUD_FRONT_DISTRIBUTION_ID: E3ELPY32A191FY
+      S3_BUCKET_URL: s3://review.swiswiswift.com
+      CLOUD_FRONT_DISTRIBUTION_ID: E3EK69PNKIEPZ1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
