@@ -55,6 +55,10 @@ resource "aws_api_gateway_integration_response" "token_unregistration_post_integ
   response_templates = {
     "application/json" = ""
   }
+
+  depends_on = [
+    aws_api_gateway_integration.token_unregistration_post_integration
+  ]
 }
 
 # Options
