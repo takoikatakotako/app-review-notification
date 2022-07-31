@@ -1,36 +1,36 @@
 ##################################################
 # API Gateway
 ##################################################
-resource "aws_api_gateway_resource" "token_description_resource" {
+resource "aws_api_gateway_resource" "token_registration_resource" {
   rest_api_id = aws_api_gateway_rest_api.app_review_rest_api.id
   parent_id   = aws_api_gateway_resource.token_resource.id
-  path_part   = "description"
+  path_part   = "registration"
 }
 
-resource "aws_api_gateway_method" "token_description_post_method" {
+resource "aws_api_gateway_method" "token_registration_post_method" {
   rest_api_id   = aws_api_gateway_rest_api.app_review_rest_api.id
-  resource_id   = aws_api_gateway_resource.token_description_resource.id
+  resource_id   = aws_api_gateway_resource.token_registration_resource.id
   http_method   = "POST"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "token_description_post_integration" {
+resource "aws_api_gateway_integration" "token_registration_post_integration" {
   rest_api_id             = aws_api_gateway_rest_api.app_review_rest_api.id
-  resource_id             = aws_api_gateway_resource.token_description_resource.id
-  http_method             = aws_api_gateway_method.token_description_post_method.http_method
+  resource_id             = aws_api_gateway_resource.token_registration_resource.id
+  http_method             = aws_api_gateway_method.token_registration_post_method.http_method
   type                    = "AWS_PROXY"
   content_handling        = "CONVERT_TO_TEXT"
   integration_http_method = "POST"
-  uri                     = module.token_description_post_lambda_function.invoke_arn
+  uri                     = module.token_registration_post_lambda_function.invoke_arn
   cache_key_parameters    = []
   request_parameters      = {}
   request_templates       = {}
 }
 
-resource "aws_api_gateway_method_response" "token_description_post_method_response" {
+resource "aws_api_gateway_method_response" "token_registration_post_method_response" {
   rest_api_id = aws_api_gateway_rest_api.app_review_rest_api.id
-  resource_id = aws_api_gateway_resource.token_description_resource.id
-  http_method = aws_api_gateway_method.token_description_post_method.http_method
+  resource_id = aws_api_gateway_resource.token_registration_resource.id
+  http_method = aws_api_gateway_method.token_registration_post_method.http_method
   status_code = "200"
 
   response_models = {
@@ -42,11 +42,11 @@ resource "aws_api_gateway_method_response" "token_description_post_method_respon
   }
 }
 
-resource "aws_api_gateway_integration_response" "token_description_post_integration_response" {
+resource "aws_api_gateway_integration_response" "token_registration_post_integration_response" {
   rest_api_id = aws_api_gateway_rest_api.app_review_rest_api.id
-  resource_id = aws_api_gateway_resource.token_description_resource.id
-  http_method = aws_api_gateway_method.token_description_post_method.http_method
-  status_code = aws_api_gateway_method_response.token_description_post_method_response.status_code
+  resource_id = aws_api_gateway_resource.token_registration_resource.id
+  http_method = aws_api_gateway_method.token_registration_post_method.http_method
+  status_code = aws_api_gateway_method_response.token_registration_post_method_response.status_code
 
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
@@ -58,22 +58,22 @@ resource "aws_api_gateway_integration_response" "token_description_post_integrat
 }
 
 # Options
-module "token_description_options_method" {
+module "token_registration_options_method" {
   source      = "./options_method"
   rest_api_id = aws_api_gateway_rest_api.app_review_rest_api.id
-  resource_id = aws_api_gateway_resource.token_description_resource.id
+  resource_id = aws_api_gateway_resource.token_registration_resource.id
 }
 
 ##################################################
 # Lambda
 ##################################################
-module "token_description_post_lambda_function" {
+module "token_registration_post_lambda_function" {
   source           = "./lambda_function"
-  function_name    = "token-description-get-function"
+  function_name    = "token-registration-get-function"
   role             = aws_iam_role.api_gateway_lambda_role.arn
-  filename         = "token_description.py"
-  archive_filename = "token_description_archive_file.zip"
+  filename         = "registration_function.py"
+  archive_filename = "registration_function_archive_file.zip"
   execution_arn    = aws_api_gateway_rest_api.app_review_rest_api.execution_arn
   method           = "POST"
-  path             = "/token/description"
+  path             = "/token/registration"
 }

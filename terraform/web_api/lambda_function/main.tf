@@ -6,7 +6,7 @@ resource "aws_lambda_function" "lambda_function" {
   role             = var.role
   runtime          = "python3.9"
   handler          = "lambda_function.lambda_handler"
-  timeout          = 30
+  timeout          = 3
   filename         = data.archive_file.python_script_archive_file.output_path
   source_code_hash = data.archive_file.python_script_archive_file.output_base64sha256
 
@@ -31,34 +31,13 @@ data "template_file" "python_script_file" {
   template = file("${path.module}/script/${var.filename}")
 }
 
-resource "aws_lambda_function_url" "function_url" {
-  function_name      = aws_lambda_function.lambda_function.function_name
-  authorization_type = "NONE"
 
-  cors {
-    allow_credentials = false
-    allow_headers = [
-      "content-type",
-    ]
-    allow_methods = [
-      "POST",
-    ]
-    allow_origins = [
-      "*",
-    ]
-    expose_headers = [
-      "content-type",
-    ]
-    max_age = 0
-  }
+resource "aws_lambda_permission" "lambda_permission" {
+  statement_id  = "api-gateway-${var.function_name}-statement-id"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  # The /*/*/* part allows invocation from any stage, method and resource path
+  source_arn = "${var.execution_arn}/*/${var.method}${var.path}"
 }
-
-# resource "aws_lambda_permission" "lambda_permission" {
-#   statement_id  = "api-gateway-${var.function_name}-statement-id"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.lambda_function.function_name
-#   principal     = "apigateway.amazonaws.com"
-
-#   # The /*/*/* part allows invocation from any stage, method and resource path
-#   source_arn = "${var.execution_arn}/*/${var.method}${var.path}"
-# }

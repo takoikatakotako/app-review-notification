@@ -13,3 +13,16 @@ variable "filename" {
 variable "archive_filename" {
   type = string
 }
+
+variable "execution_arn" {
+  type = string
+}
+
+variable "method" {
+  type = string
+}
+
+variable "path" {
+  type = string
+}
+

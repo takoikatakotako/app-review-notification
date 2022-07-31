@@ -1,21 +1,6 @@
-module "registration_function" {
-  source           = "./lambda_function"
-  function_name    = "registration-function"
-  role             = aws_iam_role.lambda_role.arn
-  filename         = "registration_function.py"
-  archive_filename = "registration_function_archive_file.zip"
-}
-
-module "unregistration_function" {
-  source           = "./lambda_function"
-  function_name    = "unregistration-function"
-  role             = aws_iam_role.lambda_role.arn
-  filename         = "unregistration_function.py"
-  archive_filename = "unregistration_function_archive_file.zip"
-}
-
-
-
+##################################################
+# API Gateway
+##################################################
 resource "aws_api_gateway_rest_api" "app_review_rest_api" {
   name = "app-review-api"
 }
@@ -30,7 +15,6 @@ resource "aws_api_gateway_deployment" "app_review_deployment" {
     ]
   }
 }
-
 
 resource "aws_api_gateway_stage" "app_review_stage" {
   deployment_id = aws_api_gateway_deployment.app_review_deployment.id
