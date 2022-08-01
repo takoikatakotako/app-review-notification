@@ -32,6 +32,9 @@ resource "aws_api_gateway_stage" "app_review_stage" {
 resource "aws_api_gateway_domain_name" "api_gateway_domain_name" {
   regional_certificate_arn = var.acm_certificate_arn
   domain_name              = var.domain
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_base_path_mapping" "api_gateway_base_path_mapping" {
@@ -40,21 +43,17 @@ resource "aws_api_gateway_base_path_mapping" "api_gateway_base_path_mapping" {
   domain_name = aws_api_gateway_domain_name.api_gateway_domain_name.domain_name
 }
 
+##############################################################
+# Route53
+##############################################################
+resource "aws_route53_record" "route53_record" {
+  zone_id = var.route53_zone_id
+  name    = var.domain
+  type    = "A"
 
-# terraform import module.web_api.aws_api_gateway_stage.app_review_stage lleh796zq8/production
-
-# terraform import module.web_api.aws_api_gateway_resource.token_resource lleh796zq8/f8anq8
-
-
-# ## UNAUTHORIZED
-# resource "aws_api_gateway_gateway_response" "turnip_unauthorized_response" {
-#   rest_api_id   = aws_api_gateway_rest_api.turnip_api.id
-#   status_code   = "401"
-#   response_type = "UNAUTHORIZED"
-
-#   response_templates = {
-#     "application/json" = "{\"message\":$context.error.messageString}"
-#   }
-
-#   response_parameters = {}
-# }
+  alias {
+    evaluate_target_health = true
+    name                   = aws_api_gateway_domain_name.api_gateway_domain_name.regional_domain_name
+    zone_id                = aws_api_gateway_domain_name.api_gateway_domain_name.regional_zone_id
+  }
+}
