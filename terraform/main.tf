@@ -14,11 +14,14 @@ module "notification_batch" {
 
 module "web_front" {
   source              = "./web_front"
-  domain              = local.domain
+  domain              = local.front_domain
   route53_zone_id     = local.route53_zone_id
-  acm_certificate_arn = local.acm_certificate_arn
+  acm_certificate_arn = local.front_acm_certificate_arn
 }
 
 module "web_api" {
-  source = "./web_api"
+  source              = "./web_api"
+  domain              = local.api_domain
+  route53_zone_id     = local.route53_zone_id
+  acm_certificate_arn = local.api_acm_certificate_arn
 }

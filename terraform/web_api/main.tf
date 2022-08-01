@@ -29,6 +29,17 @@ resource "aws_api_gateway_stage" "app_review_stage" {
   }
 }
 
+resource "aws_api_gateway_domain_name" "api_gateway_domain_name" {
+  regional_certificate_arn = var.acm_certificate_arn
+  domain_name              = var.domain
+}
+
+resource "aws_api_gateway_base_path_mapping" "api_gateway_base_path_mapping" {
+  api_id      = aws_api_gateway_rest_api.app_review_rest_api.id
+  stage_name  = aws_api_gateway_stage.app_review_stage.stage_name
+  domain_name = aws_api_gateway_domain_name.api_gateway_domain_name.domain_name
+}
+
 
 # terraform import module.web_api.aws_api_gateway_stage.app_review_stage lleh796zq8/production
 
